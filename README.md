@@ -1,2 +1,3 @@
-# -Users-rjl-git-clawpack-geoclaw_tutorial_csdms2019
+# geoclaw_tutorial_csdms2019
+
 For CSDMS webinar, May 7, 2019
