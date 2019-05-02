@@ -1,4 +1,3 @@
-FROM ubuntu:16.04
 
 # Install some useful tools + gfortran
 RUN apt-get update \
@@ -51,18 +50,16 @@ User jovyan
 RUN virtualenv ${VIRTUAL_ENV}
 ENV PYTHONHOME ${VIRTUAL_ENV}
 
-# Install notebook extensions
-RUN pip install --no-cache-dir \
-    jupyter \
-    jupyter_contrib_nbextensions \
-    jupyterhub-legacy-py2-singleuser==0.7.2
-
+RUN pip install --no-cache-dir notebook==5.*
 
 # Install clawpack-v5.5.0:
 RUN pip2 install --src=$HOME/clawpack_src -e git+https://github.com/clawpack/clawpack.git@v5.5.0#egg=clawpack-v5.5.0
 
-# Add book's files
 
 RUN pip install --no-cache-dir -r $HOME/geoclaw_tutorial_csdms2019/requirements.txt
 
-CMD jupyter notebook --ip='*' --no-browser
+# Make sure the contents of our repo are in ${HOME}
+COPY . ${HOME}
+USER root
+RUN chown -R ${NB_UID} ${HOME}
+USER ${NB_USER}
