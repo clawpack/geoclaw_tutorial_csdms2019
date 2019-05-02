@@ -20,7 +20,7 @@ RUN echo 'export FC=gfortran' >> ~/.bashrc
 # Download the master branch of the apps repository and rename:
 # (You can change `master` to a commit hash for a different version)
 RUN curl -sL https://github.com/clawpack/apps/archive/128e289c43b.tar.gz | tar xz
-RUN mv apps-* /clawpack-v5.5.0/apps
+RUN mv apps-* $HOME/clawpack_src/clawpack-v5.5.0/apps
 
 # Additional Python packages useful for GeoClaw
 RUN conda install basemap
