@@ -1,31 +1,68 @@
+FROM ubuntu:16.04
 
-# Install anaconda Python stack and some other useful tools
-FROM continuumio/anaconda
-RUN apt-get update
-RUN apt-get install -y tar git curl wget dialog net-tools build-essential
+# Install some useful tools + gfortran
+RUN apt-get update \
+ && apt-get install -yq \
+    locales \
+    dialog \
+    net-tools \
+    tar \
+    git \
+    nano \
+    vim \
+    curl \
+    wget \
+    gfortran \
+    build-essential \
+    python \
+    python-dev \
+    virtualenv \
+    && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
-# Install editors:
-RUN apt-get install -y vim nano
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
 
-# Install gfortran
-RUN apt-get install -y gfortran
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV VIRTUAL_ENV /srv/venv
+ENV PATH ${VIRTUAL_ENV}/bin:${PATH}
+
+# Use bash as default shell, rather than sh
+ENV SHELL /bin/bash
+
+# Set up user
+ENV NB_USER jovyan
+ENV NB_UID 1000
+ENV HOME /home/${NB_USER}
+
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
+
+WORKDIR ${HOME}
+
+RUN mkdir -p ${VIRTUAL_ENV} && chown ${NB_USER}:${NB_USER} ${VIRTUAL_ENV}
+
+User jovyan
+
+RUN virtualenv ${VIRTUAL_ENV}
+ENV PYTHONHOME ${VIRTUAL_ENV}
+
+# Install notebook extensions
+RUN pip install --no-cache-dir \
+    jupyter \
+    jupyter_contrib_nbextensions \
+    jupyterhub-legacy-py2-singleuser==0.7.2
+
 
 # Install clawpack-v5.5.0:
-RUN pip install --src=$HOME/clawpack_src --user -e git+https://github.com/clawpack/clawpack.git@v5.5.0#egg=clawpack-v5.5.0
+RUN pip2 install --src=$HOME/clawpack_src -e git+https://github.com/clawpack/clawpack.git@v5.5.0#egg=clawpack-v5.5.0
 
-# Set environment variables:
-RUN echo 'export CLAW=/clawpack-v5.5.0' >> ~/.bashrc
-RUN echo 'export FC=gfortran' >> ~/.bashrc
+# Add book's files
 
-# Download the master branch of the apps repository and rename:
-# (You can change `master` to a commit hash for a different version)
-RUN curl -sL https://github.com/clawpack/apps/archive/128e289c43b.tar.gz | tar xz
-RUN mv apps-* $HOME/clawpack_src/clawpack-v5.5.0/apps
+RUN pip install --no-cache-dir -r $HOME/geoclaw_tutorial_csdms2019/requirements.txt
 
-# Additional Python packages useful for GeoClaw
-RUN conda install basemap
-RUN conda install netCDF4
-RUN conda install xarray
-RUN pip install pykml
-RUN pip install pyproj
-
+CMD jupyter notebook --ip='*' --no-browser
