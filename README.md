@@ -5,6 +5,8 @@
 For [CSDMS](https://csdms.colorado.edu/wiki/Main_Page) webinar, May 7, 2019.  
 [Abstract](https://csdms.colorado.edu/wiki/Presenters-0439)
 
+You can view html versions of the notebooks [here](http://depts.washington.edu/clawpack/geoclaw/tutorial_csdms2019/)
+
 ## Contents
 
  - `geoclaw_examples` has two examples to be run from the command line in 
