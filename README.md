@@ -2,7 +2,7 @@
 
 ### You can also access this repository using https://tinyurl.com/y3g2adcp
 
-For [https://csdms.colorado.edu/wiki/Main_Page](CSDMS) webinar, May 7, 2019.  
+For [CSDMS](https://csdms.colorado.edu/wiki/Main_Page) webinar, May 7, 2019.  
 [Abstract](https://csdms.colorado.edu/wiki/Presenters-0439)
 
 ## Contents
